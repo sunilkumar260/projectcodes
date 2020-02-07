@@ -1,0 +1,188 @@
+@isTest
+public class ZSP_RegistrationController_Test {
+    
+    public static testMethod void testcase1() {
+            
+        
+        ZSP_Registration__c zsp = new ZSP_Registration__c();
+        
+        zsp.Title__c ='Mr.';
+        zsp.First_name__c = 'abc';
+        zsp.Last_name__c = 'xyz';
+        zsp.Email_ID__c='test@test123.com';
+        zsp.Organization__c = 'test';
+        zsp.Position__c = 'dev';
+        zsp.Address__c = 'test';
+        zsp.City_Town_Suburb__c='pune';
+        zsp.State_Region__c = 'maharashtra';
+        zsp.Zipcode_Postal_code__c = 411037;
+        zsp.Country__c = 'USA';
+        zsp.Phone__c = '09623580938';
+        zsp.Mobile__c = '09623580938';
+        zsp.Category_Type__c = 'Health';
+        zsp.Where_did_you_hear_about_prize__c = 'Online advertisement'; 
+        zsp.Website__c='WWW.google.com';
+        
+        PageReference pageRef = Page.ZSP_RegForm;
+        Test.setCurrentPage(pageRef);
+        ZSP_RegistrationController ins=new ZSP_RegistrationController();
+        ins.rg=zsp;
+        ins.getsocialMediaSelected(); 
+        ins.getCategory(); 
+        ins.getSocialMedias(); 
+        ins.getOutreachPartners(); 
+        ins.saveData(); 
+        ins.getCategoryValues(); 
+        ins.getAboutPrizes(); 
+        ins.gethearPrize();
+    
+    }
+    
+    public static testMethod void testcase2() {
+            
+        
+        ZSP_Registration__c zsp = new ZSP_Registration__c();
+        
+        zsp.Title__c ='';
+        zsp.First_name__c = '';
+        zsp.Last_name__c = 'xyz';
+        zsp.Email_ID__c='test@test123.com';
+        zsp.Organization__c = 'test';
+        zsp.Position__c = 'dev';
+        zsp.Address__c = 'test';
+        zsp.City_Town_Suburb__c='pune';
+        zsp.State_Region__c = 'maharashtra';
+        zsp.Zipcode_Postal_code__c = 411037;
+        zsp.Country__c = 'Brunei';
+        zsp.Phone__c = '09623580938';
+        zsp.Mobile__c = '09623580938';
+        zsp.Category_Type__c = 'Health';
+        zsp.Where_did_you_hear_about_prize__c = 'Social media (please specify):'; 
+        zsp.Website__c='WWW.google.com';
+        
+        PageReference pageRef = Page.ZSP_RegForm;
+        Test.setCurrentPage(pageRef);
+        ZSP_RegistrationController ins=new ZSP_RegistrationController();
+        ins.rg=zsp;
+        ins.getsocialMediaSelected(); 
+        ins.getCategory(); 
+        ins.getSocialMedias(); 
+        ins.getOutreachPartners(); 
+        ins.saveData(); 
+        ins.getCategoryValues(); 
+        ins.getAboutPrizes(); 
+        ins.gethearPrize();
+    
+    }
+    
+    public static testMethod void testcase3() {
+            
+        
+        ZSP_Registration__c zsp = new ZSP_Registration__c();
+        
+        zsp.Title__c ='Mr.';
+        zsp.First_name__c = 'abc';
+        zsp.Last_name__c = 'xyz';
+        zsp.Email_ID__c='test@test123.com';
+        zsp.Organization__c = 'test';
+        zsp.Position__c = 'dev';
+        zsp.Address__c = 'test'; 
+        zsp.City_Town_Suburb__c='pune';
+        zsp.State_Region__c = 'maharashtra';
+        zsp.Zipcode_Postal_code__c = 411037;
+        zsp.Country__c = 'Algeria';
+        zsp.Phone__c = '09623580938';
+        zsp.Mobile__c = '09623580938';
+        zsp.Category_Type__c = 'Health';
+        zsp.Where_did_you_hear_about_prize__c ='The Prize outreach partner (please specify):'; 
+        zsp.Website__c='WWW.google.com';
+        
+        PageReference pageRef = Page.ZSP_RegForm;
+        Test.setCurrentPage(pageRef);
+        ZSP_RegistrationController ins=new ZSP_RegistrationController();
+        ins.rg=zsp;
+        ins.getsocialMediaSelected(); 
+        ins.getCategory(); 
+        ins.getSocialMedias(); 
+        ins.getOutreachPartners(); 
+        ins.saveData(); 
+        ins.getCategoryValues(); 
+        ins.getAboutPrizes(); 
+        ins.gethearPrize();
+    
+    }
+    
+    public static testMethod void testcase4() {
+            
+        
+        ZSP_Registration__c zsp = new ZSP_Registration__c();
+        
+        zsp.Title__c ='Mr.';
+        zsp.First_name__c = 'abc';
+        zsp.Last_name__c = 'xyz';
+        zsp.Email_ID__c='test@test123.com';
+        zsp.Organization__c = 'test';
+        zsp.Position__c = 'dev';
+        zsp.Address__c = 'test';
+        zsp.City_Town_Suburb__c='pune';
+        zsp.State_Region__c = 'maharashtra';
+        zsp.Zipcode_Postal_code__c = 411037;
+        zsp.Country__c = 'USA';
+        zsp.Phone__c = '09623580938';
+        zsp.Mobile__c = '09623580938';
+        zsp.Category_Type__c = 'Health';
+        zsp.Where_did_you_hear_about_prize__c = 'At an event or forum (please specify)'; 
+        zsp.Website__c='WWW.google.com';
+        
+        PageReference pageRef = Page.ZSP_RegForm;
+        Test.setCurrentPage(pageRef);
+        ZSP_RegistrationController ins=new ZSP_RegistrationController();
+        ins.rg=zsp;
+        ins.getsocialMediaSelected(); 
+        ins.getCategory(); 
+        ins.getSocialMedias(); 
+        ins.getOutreachPartners(); 
+        ins.saveData(); 
+        ins.getCategoryValues(); 
+        ins.getAboutPrizes(); 
+        ins.gethearPrize();
+    
+    }
+    
+    public static testMethod void testcase5() {
+            
+        
+        ZSP_Registration__c zsp = new ZSP_Registration__c();
+        
+        zsp.Title__c ='Mr.';
+        zsp.First_name__c = 'abc';
+        zsp.Last_name__c = 'xyz';
+        zsp.Email_ID__c='test@test123.com';
+        zsp.Organization__c = 'test';
+        zsp.Position__c = 'dev';
+        zsp.Address__c = 'test';
+        zsp.City_Town_Suburb__c='pune';
+        zsp.State_Region__c = 'maharashtra';
+        zsp.Zipcode_Postal_code__c = 411037;
+        zsp.Country__c = 'USA';
+        zsp.Phone__c = '09623580938';
+        zsp.Mobile__c = '09623580938';
+        zsp.Category_Type__c = 'Health';
+        zsp.Where_did_you_hear_about_prize__c = 'Other (please specify)'; 
+        zsp.Website__c='WWW.google.com';
+        
+        PageReference pageRef = Page.ZSP_RegForm;
+        Test.setCurrentPage(pageRef);
+        ZSP_RegistrationController ins=new ZSP_RegistrationController();
+        ins.rg=zsp;
+        ins.getsocialMediaSelected(); 
+        ins.getCategory(); 
+        ins.getSocialMedias(); 
+        ins.getOutreachPartners(); 
+        ins.saveData(); 
+        ins.getCategoryValues(); 
+        ins.getAboutPrizes(); 
+        ins.gethearPrize();
+    
+    }
+}

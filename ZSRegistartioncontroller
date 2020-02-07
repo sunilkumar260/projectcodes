@@ -1,0 +1,397 @@
+global class ZSP_RegistrationController {
+    
+    global ZSP_Registration__c rg {get;set;}
+    public Boolean showMsgSec {get;set;}
+    public string errorMsg{get;set;}
+    public Boolean showError {get;set;}
+    public Boolean showPriceError {get;set;}
+    public Boolean showSocialMediaError {get;set;}
+    public Boolean showOutreachError {get;set;}
+    public Boolean showEventForumError {get;set;}
+    public Boolean showOtherError {get;set;}
+    public Boolean showtitleError {get;set;}
+    public Boolean showFirstNameError {get;set;}
+    
+    public Boolean showLastNameError {get;set;}
+    public Boolean showEmailError {get;set;}
+    public Boolean showOrgError {get;set;}
+    public Boolean showpositionError {get;set;}
+    public Boolean showAddressError {get;set;}
+    public Boolean showCityError {get;set;}
+    public Boolean showZipcodeError {get;set;}
+    
+    public Boolean showCountryError {get;set;}
+    public Boolean showPhoneError {get;set;}
+    public Boolean showMobileError {get;set;}
+    
+    public List<String> categories{get;set;}
+    public Map<String, Boolean> categoryMap{get;set;}
+    public String selectedItem {get;set;}
+    public Boolean socialMedia {get; set;}
+    public Boolean outReach {get; set;}
+    //public string socialMediaSelected{get;set;}
+    public String[] socialMediaSelected = new String[]{};
+    public String[] getsocialMediaSelected() {
+        return socialMediaSelected;
+    }
+
+    public void setsocialMediaSelected(String[] socialMediaSelected) {
+        this.socialMediaSelected = socialMediaSelected;
+    }
+        
+   /* public List<SelectOption> categories {
+        get {
+            if (categories == null) {
+                categories = new List<SelectOption>();
+                categories.add(new SelectOption('Health', 'Health'));
+                categories.add(new SelectOption('Food', 'Food'));
+                categories.add(new SelectOption('Energy', 'Energy'));
+                categories.add(new SelectOption('Water', 'Water'));
+                categories.add(new SelectOption('Global High School', 'Global High School'));
+            }
+            return categories;
+        }
+        private set;
+    } */
+    
+    global ZSP_RegistrationController(){
+        rg = New ZSP_Registration__c();
+        showMsgSec = false;
+        rg.Category_Type__c = Null;
+        categories = getCategoryValues();
+        categoryMap = new Map<String, Boolean>();
+        for(String cat : categories){
+            categoryMap.put(cat,true);
+        }
+        system.debug('categoryMap >>> '+categoryMap);
+    }
+    
+    public List<String> getCategoryValues(){
+       List<String> pickListValuesList= new List<String>();
+		Schema.DescribeFieldResult fieldResult = ZSP_Registration__c.Category_Type__c.getDescribe();
+		List<Schema.PicklistEntry> ple = fieldResult.getPicklistValues();
+		for( Schema.PicklistEntry pickListVal : ple){
+			pickListValuesList.add(pickListVal.getLabel());
+		}     
+		return pickListValuesList;
+    }
+
+ /*   public List<String> getTitleValues(){
+       List<String> pickListValuesList= new List<String>();
+		Schema.DescribeFieldResult fieldResult = ZSP_Registration__c.Title__c.getDescribe();
+		List<Schema.PicklistEntry> ple = fieldResult.getPicklistValues();
+		for( Schema.PicklistEntry pickListVal : ple){
+			pickListValuesList.add(pickListVal.getLabel());
+		}     
+		//return pickListValuesList;
+		return null;
+    }*/
+
+    public List<SelectOption> getCategory(){
+       List<SelectOption > pickListValuesList= new List<SelectOption >();
+		Schema.DescribeFieldResult fieldResult = ZSP_Registration__c.Category_Type__c.getDescribe();
+		List<Schema.PicklistEntry> ple = fieldResult.getPicklistValues();
+		for( Schema.PicklistEntry pickListVal : ple){
+			pickListValuesList.add(new selectOption(pickListVal.getLabel(), pickListVal.getValue()));
+		} 
+        System.debug('getCategory >>> '+pickListValuesList);
+		return pickListValuesList;
+    }
+    
+    public List<SelectOption> getAboutPrizes(){
+        List<SelectOption > pickListValuesList= new List<SelectOption >();
+        Schema.DescribeFieldResult fieldResult = ZSP_Registration__c.Where_did_you_hear_about_prize__c.getDescribe();
+        List<Schema.PicklistEntry> ple = fieldResult.getPicklistValues();
+        for( Schema.PicklistEntry pickListVal : ple){
+            pickListValuesList.add(new selectOption(pickListVal.getLabel(), pickListVal.getValue()));
+        }     
+        System.debug('getAboutPrizes >>> '+pickListValuesList);
+        return pickListValuesList;
+    }
+    
+    public List<SelectOption> getSocialMedias(){
+        List<SelectOption > pickListValuesList= new List<SelectOption >();
+        Schema.DescribeFieldResult fieldResult = ZSP_Registration__c.Social_Media__c.getDescribe();
+        List<Schema.PicklistEntry> ple = fieldResult.getPicklistValues();
+        for( Schema.PicklistEntry pickListVal : ple){
+            pickListValuesList.add(new selectOption(pickListVal.getLabel(), pickListVal.getValue()));
+        }    
+        System.debug('getSocialMedias >>> '+pickListValuesList);
+        return pickListValuesList;
+    }
+    
+    public List<SelectOption> getOutreachPartners(){
+       List<SelectOption > pickListValuesList= new List<SelectOption >();
+        system.debug('inside test>>>'+pickListValuesList);
+		Schema.DescribeFieldResult fieldResult = ZSP_Registration__c.The_Prize_Outreach_Partner__c.getDescribe();
+		List<Schema.PicklistEntry> ple = fieldResult.getPicklistValues();
+		for( Schema.PicklistEntry pickListVal : ple){
+			pickListValuesList.add(new selectOption(pickListVal.getLabel(), pickListVal.getValue()));
+		}  
+        System.debug('getOutreachPartners >>> '+pickListValuesList);
+		return pickListValuesList;
+    }
+    
+    public PageReference gethearPrize(){
+        socialMediaSelected = new String[]{};
+        rg.The_Prize_Outreach_Partner__c = null;
+        rg.Event_OR_Forum__c = null;
+        rg.Other__c = null;
+        
+        	
+        showError = false; 
+        showPriceError = false; 
+        showSocialMediaError= false;
+        showOutreachError = false;
+        showEventForumError= false;
+        showOtherError = false;
+        
+        //socialMediaSelected = null;
+        System.debug('aboutPrize >>> '+rg.Where_did_you_hear_about_prize__c);
+        
+         if(rg.Category_Type__c == Null || rg.Category_Type__c == ''){
+            showError = true;
+        }/*else if(rg.Where_did_you_hear_about_prize__c == 'Social media (please specify):' &&  rg.Social_Media__c == null){
+            showSocialMediaError = true;
+        }else if(rg.Where_did_you_hear_about_prize__c == 'The Prize outreach partner (please specify):' &&  rg.The_Prize_Outreach_Partner__c == null){
+            showOutreachError = true;
+        }else if(rg.Where_did_you_hear_about_prize__c == 'At an event or forum (please specify)' &&  rg.Event_OR_Forum__c == null){
+            showEventForumError = true;
+        }else if(rg.Where_did_you_hear_about_prize__c == 'Other (please specify)' &&  rg.Other__c == null){
+            showOtherError = true;
+        } */
+        
+        if(rg.Where_did_you_hear_about_prize__c == 'Social media (please specify):'){
+            rg.The_Prize_Outreach_Partner__c = null;
+            rg.Event_OR_Forum__c = null;
+            rg.Other__c = null;
+            socialMedia = true;
+        } else if(rg.Where_did_you_hear_about_prize__c == 'The Prize outreach partner (please specify):'){
+            rg.Social_Media__c = null;
+            rg.Event_OR_Forum__c = null;
+            rg.Other__c = null;
+            
+        } else if(rg.Where_did_you_hear_about_prize__c == 'At an event or forum (please specify)'){
+             rg.The_Prize_Outreach_Partner__c = null;
+            rg.Social_Media__c = null;
+            rg.Other__c = null;
+        } else if(rg.Where_did_you_hear_about_prize__c == 'Other (please specify)'){
+             rg.The_Prize_Outreach_Partner__c = null;
+             rg.Event_OR_Forum__c = null;
+            rg.Social_Media__c = null;
+        }else {
+            rg.The_Prize_Outreach_Partner__c = null;
+            rg.Social_Media__c = null;
+            rg.Event_OR_Forum__c = null;
+            rg.Other__c = null;
+            socialMediaSelected = null;
+        } 
+        return null;
+    }
+    
+    global pagereference saveData(){
+        showError = false; 
+        showPriceError = false;
+        showSocialMediaError= false;
+        showOutreachError = false;
+        showEventForumError= false;
+        showOtherError = false;
+        system.debug('Category_Type__c >>'+ rg.Category_Type__c);
+        system.debug('Hear about Prize >>'+ rg.Where_did_you_hear_about_prize__c);
+        system.debug('Social Media bwefore>>'+ rg.Social_Media__c);
+        system.debug('Outreach Partner >>'+ rg.The_Prize_Outreach_Partner__c);
+        system.debug('socialMediaSelected  >>'+ socialMediaSelected);
+        rg.Social_Media__c= format(socialMediaSelected);
+         system.debug('Social Media after>>'+ rg.Social_Media__c);
+   
+        if (rg.Category_Type__c == 'School'){
+            rg.Category_Type__c = 'Global High School';
+        }
+        map<string, List<string>> countryMap = New Map<string, List<string>>();
+        
+        for (ZSP_Region__mdt zsp : [select id, DeveloperName, Country_Names__c from ZSP_Region__mdt]) {
+            if(zsp.Country_Names__c != null){
+                countryMap.put(zsp.DeveloperName, zsp.Country_Names__c.split(';'));   
+            }
+        }
+        
+        System.debug('countryMap  >>>  '+countryMap); 
+        System.debug('rgrg  >>>  '+rg); 
+        if(rg.Where_did_you_hear_about_prize__c == 'Social media (please specify):'){
+            rg.The_Prize_Outreach_Partner__c = null;
+            socialMedia = true;
+        } else if(rg.Where_did_you_hear_about_prize__c == 'The Prize outreach partner (please specify):'){
+            rg.Social_Media__c = null;
+        } else if(rg.Where_did_you_hear_about_prize__c == 'At an event or forum (please specify)'){
+            rg.The_Prize_Outreach_Partner__c = null;
+            rg.Social_Media__c = null;
+        } else if(rg.Where_did_you_hear_about_prize__c == 'Other (please specify)'){
+            rg.The_Prize_Outreach_Partner__c = null;
+            rg.Social_Media__c = null;
+            rg.Event_OR_Forum__c = null;
+        }else {
+            rg.The_Prize_Outreach_Partner__c = null;
+            rg.Social_Media__c = null;
+            rg.Event_OR_Forum__c = null;
+            rg.Other__c = null;
+        } 
+        if(rg.Title__c == Null || rg.Title__c == '' || rg.Title__c == '--Select one--'){
+            showtitleError = true;
+        }
+        if(rg.First_name__c == Null || rg.First_name__c == ''){
+              system.debug('inside first name show error ');
+            showFirstNameError = true;
+        }
+      /*   if(rg.Last_name__c == Null || rg.Last_name__c == ''){
+            showLastNameError = true;
+        } */
+        if(rg.Email_ID__c == Null || rg.Email_ID__c == ''){
+              showEmailError = true;
+        }
+		 if(rg.Organization__c == Null || rg.Organization__c == ''){
+            showOrgError = true;
+        }
+        if(rg.Position__c == Null || rg.Position__c == ''){
+             showpositionError = true;
+        }
+         if(rg.Address__c == Null || rg.Address__c == ''){
+            showAddressError = true;
+        }
+        if(rg.City_Town_Suburb__c == Null || rg.City_Town_Suburb__c == ''){
+              showCityError = true;
+        }
+        
+         if(rg.Zipcode_Postal_code__c == Null){
+            showZipcodeError = true;
+        }
+        if(rg.Country__c == Null || rg.Country__c == '' || rg.Country__c== '--Select one--'){
+             showCountryError = true;
+        }
+         if(rg.Phone__c == Null){
+             showPhoneError = true;
+        }
+         if(rg.Mobile__c == Null){
+             showMobileError = true;
+        }
+        
+         system.debug('Category_Type__c beforeee>>'+ rg.Category_Type__c);
+         system.debug('showError beforeee>>'+ showError);
+        if(rg.Category_Type__c == Null || rg.Category_Type__c == ''){
+            showError = true;
+        }else if(rg.Where_did_you_hear_about_prize__c == '' || rg.Where_did_you_hear_about_prize__c ==  null){
+            showPriceError = true;
+        }else if(rg.Where_did_you_hear_about_prize__c == 'Social media (please specify):' &&  socialMediaSelected.isEmpty()){
+            showSocialMediaError = true;
+        }else if(rg.Where_did_you_hear_about_prize__c == 'The Prize outreach partner (please specify):' &&  rg.The_Prize_Outreach_Partner__c == null){
+            showOutreachError = true;
+        }else if(rg.Where_did_you_hear_about_prize__c == 'At an event or forum (please specify)' &&  rg.Event_OR_Forum__c == null){
+            showEventForumError = true;
+        }else if(rg.Where_did_you_hear_about_prize__c == 'Other (please specify)' &&  rg.Other__c == null){
+            showOtherError = true;
+        }else{ 
+            showError = false; 
+            showSocialMediaError= false;
+            showOutreachError = false;
+            showEventForumError= false;
+            showOtherError = false;
+            ZSP_Registration__c regZSP = New ZSP_Registration__c();
+            
+            regZSP.Title__c = rg.Title__c;
+            regZSP.First_name__c = rg.First_name__c;
+            regZSP.Last_name__c = rg.Last_name__c;
+            regZSP.Email_ID__c = rg.Email_ID__c;
+            regZSP.Organization__c = rg.Organization__c;
+            regZSP.Position__c = rg.Position__c;
+            regZSP.Address__c = rg.Address__c;
+            regZSP.State_Region__c = rg.State_Region__c;
+            regZSP.City_Town_Suburb__c = rg.City_Town_Suburb__c;
+            regZSP.Zipcode_Postal_code__c = rg.Zipcode_Postal_code__c; 	
+            regZSP.Country__c = rg.Country__c;
+            regZSP.Website__c = rg.Website__c;
+            regZSP.Phone__c = rg.Phone__c;
+            regZSP.Mobile__c = rg.Mobile__c;
+            regZSP.Where_did_you_hear_about_prize__c = rg.Where_did_you_hear_about_prize__c;
+            regZSP.Category_Type__c = rg.Category_Type__c;
+            regZSP.Social_Media__c = rg.Social_Media__c;
+            regZSP.The_Prize_Outreach_Partner__c = rg.The_Prize_Outreach_Partner__c;
+            regZSP.Event_OR_Forum__c = rg.Event_OR_Forum__c;
+             regZSP.Other__c =rg.Other__c;
+            
+            If(countryMap.get('The_Americas').contains(rg.Country__c)){
+                regZSP.Region__c = 'Americas';
+            } 
+            else If(countryMap.get('East_Asia_Pacific').contains(rg.Country__c)){
+                regZSP.Region__c = 'East Asia & Pacific';
+            }
+            else If(countryMap.get('MENA').contains(rg.Country__c)){
+                regZSP.Region__c = 'MENA';
+            }
+            else If(countryMap.get('South_Asia').contains(rg.Country__c)){
+                regZSP.Region__c = 'Asia';
+            }
+            else If(countryMap.get('Sub_Sahara_Africa').contains(rg.Country__c)){
+                regZSP.Region__c = 'Africa';
+            }
+            else If(countryMap.get('Europe_Central_Asia').contains(rg.Country__c)){
+                regZSP.Region__c = 'Europe';
+            }
+            else{
+                regZSP.Region__c = 'Other';
+            }
+            
+            regZSP.RecordTypeId =Schema.SObjectType.ZSP_Registration__c.getRecordTypeInfosByName().get(rg.Category_Type__c).getRecordTypeId();
+            //regZSP.RecordTypeId =Schema.SObjectType.ZSP_Registration__c.getRecordTypeInfosByName().get(selectedCategory).getRecordTypeId(); 
+            
+            system.debug('regZSP.RecordTypeId'+regZSP.RecordTypeId);
+            try{                
+                Insert regZSP;
+                showMsgSec = true;
+                system.debug('regZSP'+regZSP);
+                if(showMsgSec == true){
+                    rg.clear();
+                }
+            }
+            catch(DmlException de)
+            {
+                system.debug('what all the errors::'+ de);
+                Integer numErrors = de.getNumDml();
+                System.debug('getNumDml=' + numErrors);
+                for(Integer i=0;i<numErrors;i++) {
+                    
+                    System.debug('getDmlFieldNames=' + de.getDmlFieldNames(i));
+                    System.debug('getDmlMessage=' + de.getDmlMessage(i)); 
+                    System.debug(de.getDmlId(i));
+                    if(de.getDmlMessage(i).contains('Please select title')){
+                      //  rg.Title__c.addError('Please select title'); 
+                    }else if(de.getDmlMessage(i).contains('duplicate value found: Email_ID__c duplicates value on record with id:')){
+                       // rg.Email_ID__c.addError('Email already exists.');
+                        rg.Email_ID__c.addError('The input is already a registered email address.');
+                    }else if(de.getDmlMessage(i).contains('bad value for restricted picklist field:')){
+                        rg.Country__c.addError('Bad value for restricted picklist field Country'); 
+                    }else if(de.getDmlMessage(i).contains('Please select country')){
+                     //   rg.Country__c.addError('Please select country'); 
+                    }else if(de.getDmlMessage(i).contains('Phone number field should be numeric')){
+                        rg.Phone__c.addError('Phone number field should be numeric'); 
+                    }else if(de.getDmlMessage(i).contains('Mobile number field should be numeric')){
+                        rg.Mobile__c.addError('Mobile number field should be numeric'); 
+                    }
+                  else if(de.getDmlMessage(i).contains('Failed to Create Account/User')){
+                        errorMsg = 'Sorry for the inconvenience, unable to register your Account Details. Please Contact Admin.';
+                    } 
+                    else{
+                        errorMsg = 'Sorry for the inconvenience, unable to register your Account Details. Please Contact Admin.';
+                    }
+                }
+            }
+        }
+        
+        
+        return null;
+    }
+    public static String format(List<String> values) {
+        if (values == null) return null;
+        return String.join(values, ';');
+    }
+
+    
+}

@@ -1,0 +1,453 @@
+<apex:page Controller="ZSP_RegistrationController" sidebar="false" showHeader="false" docType="html-5.0">
+    <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"> 
+        <head>
+            <title>{!$CurrentPage.parameters.category}</title>
+            <apex:stylesheet value="{!URLFOR($Resource.slds,'styles/salesforce-lightning-design-system.css')}"/>
+            <apex:stylesheet value="{!URLFOR($Resource.ZSP,'style.css')}"/>
+             <apex:stylesheet value="{!URLFOR($Resource.ZSP,'/ZSP/style.css')}"/>
+            <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet" />
+            
+            <script language="Javascript" type="text/javascript">
+            var catMap = {!categories};
+            function onlyAlphabets(e, t) {
+                try {
+                    if (window.event) {
+                        var charCode = window.event.keyCode;
+                    }
+                    else if (e) {
+                        var charCode = e.which;
+                    }
+                        else { return true; }
+                    if ((charCode > 64 && charCode < 91) || (charCode > 96 && charCode < 123) || (charCode == 32))
+                        return true;
+                    else
+                        return false;
+                }
+                catch (err) {
+                    alert(err.Description);
+                }
+            }
+            
+            function selectCategory(e,t){
+                console.log('t >>> '+t.value); 
+                console.log('t >>> '+catMap);
+                
+            }
+            
+            </script> 
+            <script language="Javascript" type="text/javascript">
+            function isNumberKey(evt){
+                var charCode = (evt.which) ? evt.which : evt.keyCode
+                if (charCode > 31 && (charCode < 48 || charCode > 57))
+                    return false;
+                return true;
+            }
+            </script> 
+            
+            <script language="Javascript" type="text/javascript">
+            function blockSpecialChar(e) {
+                var k = e.keyCode;
+                return ((k > 64 && k < 91) || (k > 96 && k < 123) || k == 8   || (k >= 48 && k <= 57));
+                
+            }
+            
+            </script> 
+            
+            <style> 
+                
+                .slds-radio .slds-radio_faux, .slds-radio .slds-radio--faux {
+                width: 1.3rem;
+                height: 1.2rem;
+                text-align: center;
+                align-content: center;
+                align-items: center;
+                }
+                
+                .slds-radio .slds-form-element__label {
+                display: inline;
+                vertical-align: middle;
+                font-size: 1.5rem;
+                }
+                .slds-grid.success {
+                margin: 7rem 0 10rem 0;
+                }
+                .slds-grid {
+                margin-bottom: 2rem;
+                font-family:raleway !important;
+                
+                }
+                label.slds-form-element__label {
+                font-size: 14pt !important;
+                padding-left: 1rem;
+                }
+                
+                label{
+                color:#6f6f68; 
+                }
+                .errorStyle, .errorMsg, .importantWarning, .pbBody .errorStyle a, .pbBody .errorMsg a {
+                color: #d74c3b;
+                padding-left: 1rem;
+                }
+                .slds-input{
+                height: 34pt;
+                border: 1px solid #e8e8e8;
+                border-radius: 10px;
+                }
+                span.asterisk {
+                font-size: 10pt;
+                font-weight: bolder;
+                color: red;
+                }
+                ::-webkit-input-placeholder {
+                font-size: 12pt;
+                opacity:0.7;
+                }
+                
+                button, input, optgroup, select, textarea {
+                color: inherit;
+                font: inherit;
+                margin: 1rem;
+                }
+                
+                td{
+                font-family:unset;
+                }
+                
+            </style>
+        </head>
+        
+      <!--  <c:ZSP_HeaderComponent /> -->
+        <c:ZSP_HeaderComponentForCategory />
+        <section class="banner-section inner-pages">
+            <div class="container-fluid">
+                <div class="banner-inner">
+                    <div class="banner-inner__image" style="height: 340.611px; align-items: baseline;">
+                        <!--img src="./Zayed Sustainability Prize_files/water_v2.jpg" class="img-fluid" alt="Banner Image"/-->
+                        <apex:image styleClass="img-fluid" value="{!URLFOR($Resource.ZSP, '/ZSP/Water_v2.jpg')}" width="100%" />
+                    </div>
+                    <div class="banner-inner__info text-center">
+                        <p class="banner-inner__text"><span><b></b></span></p>                        
+                        <!--<p class="banner-inner__text"><span style=''>For universal access to clean water</span><br/><span><b>Apply before 30 May 2019</b></span></p>-->
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <body>
+           <!-- <apex:form id="frm" html-novalidate="novalidate" > -->
+                
+                <apex:form id="frm"  html-autocomplete="off" >
+                <!--   <apex:actionFunction name="CategoryChange"  reRender="">
+<apex:param name="categoryId" value="" assignTo="{!selectedCategory}"/>
+</apex:actionFunction> -->
+                <!-- <apex:message for="countryId"/>  action="{!handleCategoryChange}" 
+<apex:message for="catId"/> --> 
+                <div class="myapp">
+                    <apex:outputPanel id="section1" rendered="{!!showMsgSec}" > 
+                        <div aria-labelledby="newaccountform">
+                            <div class="slds-scope" style="padding-top: 12px;" >
+                                <form class="slds-form--stacked slds-wrap ">
+                                    <div style="width:60%;margin:0 auto;"> 
+                                        <br/>  <div class="slds-align_absolute-center" style="height: 2rem;font-size: 20pt;color:#474343;margin-bottom: 2rem;">Account Registration</div> 
+                                        <div class="slds-align_absolute-left slds-p-left_large slds-size--3-of-6" style="font-size: 11pt;color: red;margin-bottom: 1rem;">
+                                            * Indicates a required field.
+                                        </div> 
+                                        
+                                        <div class="slds-align_absolute-center" style="font-size: 13pt;color: red;margin-bottom: 2rem;">
+                                            <apex:outputLabel >{!errorMsg}</apex:outputLabel> 
+                                        </div>
+                                        <div class="slds-grid slds-grid--align-space" style="margin-top:-10px;margin-left:3px;margin-bottom:0px;">
+                                            <div class="slds-col--padded slds-size--3-of-6">
+                                                <label for="TitleId" style="margin-left: 10px;">Title<span class="asterisk">*</span></label>
+                                                <div class="slds-form-element__control">
+                                                    <div class="slds-select_container">
+                                                        <apex:inputField id="TitleId" rendered="true" value="{!rg.Title__c}" required="true"  styleClass="sdls-select" style="-webkit-appearance: none; padding-left: 8px;padding-right: 24px;background-color: white;color: #16325c; border: 1px solid #d8dde6;border-radius: 10px; width: 100%;-webkit-transition: border 0.1s linear, background-color 0.1s linear;transition: border 0.1s linear, background-color 0.1s linear;height: 45px;cursor:pointer;"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="slds-col--padded slds-size--3-of-6" style='margin-top:3.18rem'>
+                                                
+                                            </div>
+                                            
+                                        </div>
+                                        <apex:outputPanel rendered="{!showtitleError}"  style="color: red;">
+                                            <div class="slds-p-right_xxx-small slds-p-left_x-large slds-p-top_medium">  Please select title </div>
+                                        </apex:outputPanel>
+                                        <div class="slds-grid slds-grid--align-space top-padd top-padd" style="margin-top:20px;">
+                                            <div class="slds-col--padded slds-size--4-of-4">
+                                                <div>
+                                                    <div class="slds-form-element__control">
+                                                        <!-- <apex:inputField value="{!rg.First_name__c}" html-placeholder="First Name" label="First Name" id="fNameId" styleclass="slds-input" html-maxlength="50" onkeypress="return blockSpecialChar(event)"> -->
+                                                        <apex:inputField value="{!rg.First_name__c}" html-placeholder="First Name" label="First Name"  id="fNameId"  styleclass="slds-input" html-maxlength="50" >
+                                                        </apex:inputField>  
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <apex:outputPanel rendered="{!showFirstNameError}" style="color: red;padding-left: 4rem;">
+                                            Please enter first name
+                                        </apex:outputPanel>
+                                        <div class="slds-grid slds-grid--align-space top-padd top-padd">
+                                            <div class="slds-col--padded slds-size--4-of-4">
+                                                <div>
+                                                    <div class="slds-form-element__control">
+                                                        <apex:inputField value="{!rg.Last_name__c}" html-placeholder="Last Name" label="Last Name" id="lNameId" styleclass="slds-input" html-maxlength="50" > 
+                                                        </apex:inputField>    
+                                                    </div>  
+                                                </div> 
+                                            </div>
+                                        </div>
+                                        <apex:outputPanel rendered="{!showLastNameError}" style="color: red;padding-left: 4rem;">
+                                            Please enter last name
+                                        </apex:outputPanel>
+                                        <div class="slds-grid slds-grid--align-space top-padd top-padd">
+                                            <div class="slds-col--padded slds-size--4-of-4">
+                                                <div>
+                                                    <div class="slds-form-element__control">
+                                                        
+                                                        <apex:inputField value="{!rg.Email_ID__c}" html-placeholder="Email" label="Email Id" id="emailId" styleclass="slds-input" html-maxlength="50"> 
+                                                        </apex:inputField> 
+                                                        <div class="slds-form-element__control slds-p-left_large">
+                                                            <apex:message for="emailId" style="color:red;"/> 
+                                                        </div>
+                                                    </div>
+                                                    
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+                                        <apex:outputPanel rendered="{!showEmailError}" style="color: red;padding-left: 4rem;">
+                                            Please enter email address
+                                        </apex:outputPanel>
+                                        <div class="slds-grid slds-grid--align-space top-padd top-padd">
+                                            <div class="slds-col--padded slds-size--4-of-4">
+                                                <div>
+                                                    <div class="slds-form-element__control">
+                                                        <apex:inputField value="{!rg.Organization__c}" html-placeholder="Organization or School Name" label="Organization" id="OrganizationId" styleclass="slds-input" html-maxlength="50"> 
+                                                        </apex:inputField>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+                                         <apex:outputPanel rendered="{!showOrgError}" style="color: red;padding-left: 4rem;">
+                                            Please enter organization or school name
+                                        </apex:outputPanel>
+                                        <div class="slds-grid slds-grid--align-space top-padd top-padd">
+                                            <div class="slds-col--padded slds-size--4-of-4">
+                                                <div>
+                                                    <div class="slds-form-element__control">
+                                                        <apex:inputField value="{!rg.Position__c}" html-placeholder="Position" label="Position" id="positionId" styleclass="slds-input" html-maxlength="50" > 
+                                                        </apex:inputField>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                         <apex:outputPanel rendered="{!showpositionError}" style="color: red;padding-left: 4rem;">
+                                            Please enter position
+                                        </apex:outputPanel>
+                                        <div class="slds-grid slds-grid--align-space top-padd top-padd" style="margin-left:15px;"> 
+                                            <div class="slds-col--padded slds-size--4-of-4">
+                                                <label for="catid">Select the category that you are applying to<B>.</B><span class="asterisk">*</span></label>
+                                                <apex:selectRadio value="{!rg.Category_Type__c}" layout="pageDirection">
+                                                    <apex:selectOptions value="{!Category}"/>
+                                                </apex:selectRadio>
+                                            </div>
+                                        </div>
+                                        <div class="slds-form-element__control slds-p-left_large">
+                                            <apex:outputPanel rendered="{!showError}" style="color: red;">
+                                                Please choose a category
+                                            </apex:outputPanel>
+                                        </div>
+                                        <div class="slds-grid slds-grid--align-space top-padd top-padd">
+                                            <div class="slds-col--padded slds-size--4-of-4">
+                                                <div>
+                                                    <div class="slds-form-element__control">
+                                                        <apex:inputField value="{!rg.Address__c}" html-placeholder="Address" label="Address" id="addressId" styleclass="slds-input" html-maxlength="50" required="True"> 
+                                                        </apex:inputField>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <apex:outputPanel rendered="{!showAddressError}" style="color: red;padding-left: 4rem;">
+                                            Please enter address
+                                        </apex:outputPanel>
+                                        <div class="slds-grid slds-grid--align-space top-padd top-padd">
+                                            <div class="slds-col--padded slds-size--2-of-4">
+                                                <div>
+                                                    <div class="slds-form-element__control">
+                                                        <apex:inputField value="{!rg.City_Town_Suburb__c}" html-placeholder="City/Town/Suburb" label="City/Town/Suburb" id="cityId" styleclass="slds-input" html-maxlength="50" required="True"> 
+                                                        </apex:inputField>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="slds-col--padded slds-size--2-of-4">
+                                                <div>
+                                                    <div class="slds-form-element__control">
+                                                        <apex:inputField value="{!rg.State_Region__c}" html-placeholder="State/Region" label="State/Region" id="stateId" styleclass="slds-input" html-maxlength="50"> 
+                                                        </apex:inputField>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <apex:outputPanel rendered="{!showCityError}" style="color: red;padding-left: 4rem;">
+                                            Please enter city
+                                        </apex:outputPanel>
+                                        <div class="slds-grid slds-grid--align-space top-padd top-padd"> 
+                                            <div class="slds-col--padded slds-size--2-of-4">
+                                                <div>
+                                                    <div class="slds-form-element__control">
+                                                        <apex:inputField value="{!rg.Zipcode_Postal_code__c}"  html-placeholder="Zipcode/Postal code" label="Zipcode/Postal code" id="zipId" styleclass="slds-input" html-maxlength="6"> 
+                                                        </apex:inputField>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="slds-col--padded slds-size--2-of-4"></div>
+                                            
+                                        </div>
+                                        <apex:outputPanel rendered="{!showZipcodeError}" style="color: red;padding-left: 4rem;">
+                                            Please enter zipcode/postal code
+                                        </apex:outputPanel>
+                                        <div class="slds-grid slds-grid--align-space top-padd top-padd " style="margin-bottom:0px;">
+                                            <div class="slds-col--padded slds-size--2-of-4">
+                                                <label class="slds-form-element__label" for="countryId">Country<span class="asterisk">*</span></label>
+                                                <div class="slds-form-element__control">
+                                                    <div class="slds-select_container">
+                                                        <apex:inputField id="countryId" value="{!rg.Country__c}" html-placeholder="Country" styleClass="sdls-select" style="-webkit-appearance: none; padding-left: 8px;padding-right: 24px;background-color: white;color: #16325c; border: 1px solid #d8dde6;border-radius: 10px; width: 100%;-webkit-transition: border 0.1s linear, background-color 0.1s linear;transition: border 0.1s linear, background-color 0.1s linear;height: 45px;cursor:pointer;"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="slds-col--padded slds-size--2-of-4"></div>
+                                        </div>
+                                         <apex:outputPanel rendered="{!showCountryError}" style="color: red;">
+                                             <div class="slds-p-right_xxx-small slds-p-left_x-large slds-p-top_medium">   Please select country</div>
+                                        </apex:outputPanel>
+                                        <div class="slds-grid slds-grid--align-space top-padd top-padd" style="margin-top:25px;"> 
+                                            <div class="slds-col--padded slds-size--2-of-4">
+                                                <div>
+                                                    <div class="slds-form-element__control">
+                                                        <apex:inputField value="{!rg.Website__c}"  html-placeholder="Website" label="Website" id="webId" styleclass="slds-input" > 
+                                                        </apex:inputField>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="slds-col--padded slds-size--2-of-4"></div>
+                                            
+                                        </div>
+                                        
+                                        <div class="slds-grid slds-grid--align-space top-padd top-padd">
+                                            <div class="slds-col--padded slds-size--2-of-4">
+                                                <div>
+                                                    <div class="slds-form-element__control">
+                                                        <apex:inputField type="tel" onkeypress="return isNumberKey(event)" value="{!rg.Phone__c}" label="Phone" html-placeholder="Phone" id="phoneId" styleclass="slds-input" html-maxlength="50"> 
+                                                        </apex:inputField>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="slds-col--padded slds-size--2-of-4">
+                                                <div>
+                                                    <div class="slds-form-element__control">
+                                                        <apex:inputField type="tel" onkeypress="return isNumberKey(event)" html-placeholder="Mobile" value="{!rg.Mobile__c}" label="Mobile" id="mobileId" styleclass="slds-input" html-maxlength="50"> 
+                                                        </apex:inputField>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <apex:outputPanel rendered="{!showPhoneError}" style="color: red;padding-left: 4rem;">
+                                            Please enter phone
+                                        </apex:outputPanel>
+                                        <apex:outputPanel rendered="{!showMobileError}" style="color: red;padding-left: 4rem;">
+                                            Please enter mobile
+                                        </apex:outputPanel>
+                                        <div class="slds-grid slds-grid--align-space top-padd top-padd">
+                                            <div class="slds-col--padded slds-size--4-of-4">
+                                                <apex:actionregion >
+                                                    <label class="slds-form-element__label" for="aboutId">How did you hear about the Prize?<span class="asterisk">*</span></label>
+                                                    <apex:selectRadio value="{!rg.Where_did_you_hear_about_prize__c}" layout="pageDirection">
+                                                        <apex:selectOptions value="{!AboutPrizes}" /> 
+                                                        <apex:actionSupport event="onchange" reRender="outerOutputPanel, socialMedia, outReach, eventForum, other, ErrorOutputPanel" action="{!gethearPrize}"/> 
+                                                    </apex:selectRadio>
+                                                    
+                                                    <apex:outputPanel id="outerOutputPanel"  layout="block">
+                                                        <apex:outputPanel id="socialMedia" layout="block" rendered="{!IF(rg.Where_did_you_hear_about_prize__c == 'Social media (please specify):',true,false)}">
+                                                            <br/>
+                                                            <apex:outputLabel >Please select social media</apex:outputLabel>
+                                                            
+                                                            <apex:selectCheckboxes value="{!socialMediaSelected}"  layout="pageDirection" rendered="true">
+                                                                <apex:selectOptions value="{!SocialMedias}"/>
+                                                            </apex:selectCheckboxes> 
+                                                            
+                                                        </apex:outputPanel>
+                                                        <apex:outputPanel id="outReach" layout="block" rendered="{!IF(rg.Where_did_you_hear_about_prize__c == 'The Prize outreach partner (please specify):',true,false)}">
+                                                            <br/>
+                                                            <apex:outputLabel >Please select prize outreach partner</apex:outputLabel>
+                                                            <apex:selectRadio value="{!rg.The_Prize_Outreach_Partner__c}" layout="pageDirection" >
+                                                                <apex:selectOptions value="{!OutreachPartners}"/>
+                                                            </apex:selectRadio>
+                                                        </apex:outputPanel>
+                                                        <apex:outputPanel id="eventForum" layout="block" rendered="{!IF(rg.Where_did_you_hear_about_prize__c == 'At an event or forum (please specify)',true,false)}">
+                                                            <br/>
+                                                            <apex:inputField html-placeholder="Please specify the event or forum" value="{!rg.Event_OR_Forum__c}" label="Event or forum" id="eventForumId" styleclass="slds-input" > 
+                                                            </apex:inputField>
+                                                        </apex:outputPanel>
+                                                        <apex:outputPanel id="other" layout="block" rendered="{!IF(rg.Where_did_you_hear_about_prize__c == 'Other (please specify)',true,false)}">
+                                                            <br/>
+                                                            <apex:inputField html-placeholder="Other (please specify)" value="{!rg.Other__c}" label="Other" id="otherId" styleclass="slds-input" > 
+                                                            </apex:inputField>
+                                                        </apex:outputPanel>
+                                                    </apex:outputPanel> 
+                                                </apex:actionregion>
+                                            </div>
+                                        </div>
+                                        <apex:outputPanel id="ErrorOutputPanel"  layout="block">
+                                            <apex:outputPanel rendered="{!showPriceError}" style="color: red;padding-left: 4rem;">
+                                                Please select how did you hear about the Prize
+                                            </apex:outputPanel>
+                                            <apex:outputPanel rendered="{!showSocialMediaError}" style="color: red;padding-left: 4rem;">
+                                                Please select social media
+                                            </apex:outputPanel>
+                                            <apex:outputPanel rendered="{!showOutreachError}" style="color: red;padding-left: 4rem;">
+                                                Please select prize outreach partner
+                                            </apex:outputPanel>
+                                            <apex:outputPanel rendered="{!showEventForumError}" style="color: red;padding-left: 4rem;">
+                                                Please specify event or forum information
+                                            </apex:outputPanel>
+                                            <apex:outputPanel rendered="{!showOtherError}" style="color: red;padding-left: 4rem;">
+                                                Please specify other information
+                                            </apex:outputPanel>
+                                        </apex:outputPanel>
+                                    </div>
+                                    
+                                    
+                                    <br/><br/>
+                                    
+                                    <apex:commandButton action="{!saveData}"  disabled="" styleClass="slds-button slds-button_brand slds-align_absolute-center" style="font-size:1.6rem;background: #636466;color: #fff;padding: 6px 30px;border-radius:1px; position: relative;left: 43%;text-transform: capitalize;font-weight:800;font-family:din_mediumregular, Arial, sans-serif" value="SUBMIT"/>    
+                                </form>
+                            </div>
+                        </div>
+                    </apex:outputPanel>
+                    
+                    <apex:outputPanel id="section2" rendered="{!showMsgSec}" > 
+                        <div class="slds-grid success">
+                            <div class="slds-col slds-size_2-of-6"></div>
+                            <div class="slds-col slds-size_4-of-6">
+                                <div style="height: 3rem;font-size: 20pt;color:#636466;">
+                                    Thank you for registering!<br />
+                                    Please check your <b>Email</b> for login details.
+                                </div>
+                            </div>
+                            
+                        </div>
+                        
+                    </apex:outputPanel>
+                </div>
+            </apex:form>
+        </body>
+        <br/> <br/>
+    <!--    <c:ZSP_FooterComponent /> -->
+    <!--  <c:ZSP_FooterPage /> -->
+       <!-- <c:ZSP_RegFormFooter /> -->
+        <c:ZSP_FooterPage /> 
+    </html>
+</apex:page>
