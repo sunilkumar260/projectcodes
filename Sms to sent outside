@@ -1,0 +1,27 @@
+public class smsUtilityClass {
+    
+    @future(callout=true)
+    public static void smsMethod(string messageObj, String numberObj){
+        String jsonString ='{ "userName": "Masdar", "priority": 0, "referenceId": "124154324", "dlrUrl": null, "msgType": 0, "senderId": "Synapse", "message": "XX_Message_XX", "mobileNumbers": { "messageParams": [{ "mobileNumber": "XX_Number_XX" }] }, "password": "Mas@12" }';
+        jsonString = jsonString.replace('XX_Message_XX', messageObj);
+        jsonString = jsonString.replace('XX_Number_XX', numberObj);
+        System.Debug('Json Body: '+jsonString);
+        
+        
+        string endpiontURL ='https://api.me.synapselive.com/v1/multichannel/messages/sendsms';
+        
+        HttpRequest request = new HttpRequest();
+        HttpResponse response = new HttpResponse();
+        Http http = new Http();
+        request.setEndpoint(endpiontURL);
+        request.setMethod('POST');
+        request.setheader('content-type','application/json');
+        request.setBody(jsonString);       
+        response = http.send(request);
+        system.debug('Respone code::'+response.getStatusCode());
+        system.debug('Respone Body::'+response.getBody());
+        
+        //return response.getBody();
+    }
+    
+}
