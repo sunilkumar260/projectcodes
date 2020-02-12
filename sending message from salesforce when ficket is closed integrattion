@@ -1,0 +1,63 @@
+public class smsUtilityClass {
+    
+    @future(callout=true)
+    public static void smsMethod(string messageObj, String numberObj){
+        String jsonString ='{ "userName": "Masdar", "priority": 0, "referenceId": "124154324", "dlrUrl": null, "msgType": 0, "senderId": "Synapse", "message": "XX_Message_XX", "mobileNumbers": { "messageParams": [{ "mobileNumber": "XX_Number_XX" }] }, "password": "Mas@12" }';
+        jsonString = jsonString.replace('XX_Message_XX', messageObj);
+        jsonString = jsonString.replace('XX_Number_XX', numberObj);
+        System.Debug('Json Body: '+jsonString);
+        string endpiontURL ='https://api.me.synapselive.com/v1/multichannel/messages/sendsms';
+        HttpRequest request = new HttpRequest();
+        HttpResponse response = new HttpResponse();
+        Http http = new Http();
+        request.setEndpoint(endpiontURL);
+        request.setMethod('POST');
+        request.setheader('content-type','application/json');
+        request.setBody(jsonString);       
+        response = http.send(request);
+        system.debug('Respone code::'+response.getStatusCode());
+        system.debug('Respone Body::'+response.getBody());
+        
+        //return response.getBody();
+    }
+    
+}
+==========================
+public class TicketingTriggerHandler {
+    
+    public static boolean stopRecursive=true;
+    
+    public static void ticketingstatucCheck(map<id,issue__c> oldmapticket,map<id,issue__c> newmapticket){
+        
+        user u =[SELECT id,Name,MobilePhone,FirstName FROM User WHERE ID =: UserInfo.getUserId()];
+        
+        for(issue__c ticketObj : newmapticket.values())
+        {
+            if(oldmapticket.get(ticketObj.id).status__c != newmapticket.get(ticketObj.id).status__c && newmapticket.get(ticketObj.id).status__c == 'Closed')
+            {
+                system.debug('Record Owner Mobile Number::'+ u.MobilePhone);
+                string messageTomobile = 'Hi '+ u.FirstName +', ' + ' Your Salesforce ticket ' + newmapticket.get(ticketObj.id).Name + 
+                    ' has been closed by '+newmapticket.get(ticketObj.id).Assigned_To_Name__c+'. ' + ' Please login to ticketing system to view details.';
+                system.debug('Mobile Message::::'+messageTomobile);
+                smsUtilityClass.smsMethod(messageTomobile, u.MobilePhone); 
+            } 
+        }
+    }  
+    
+    public static void updateClosedate(list<issue__c> newIssue){
+        for(issue__c issueObj : newIssue){
+            if(issueObj.Status__c == 'Closed')
+                issueObj.Closed_Date__c = issueObj.LastModifiedDate;
+        }
+    }
+}
+==============================
+trigger TicketingTrigger on Issue__c (before update,after update){
+    
+    if(trigger.isafter && trigger.isupdate){
+        TicketingTriggerHandler.ticketingstatucCheck(Trigger.oldMap,Trigger.NewMap);
+    }
+    if(trigger.isbefore && trigger.isupdate){
+       TicketingTriggerHandler.updateClosedate(Trigger.new);
+    }
+}
